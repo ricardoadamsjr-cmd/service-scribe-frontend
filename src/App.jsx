@@ -55,7 +55,6 @@ export default function App() {
     borderRadius: 12,
     boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
     boxSizing: "border-box",
-    marginLeft: "auto",
     marginRight: "auto",
   }}
 >
@@ -70,6 +69,7 @@ export default function App() {
             boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
             fontFamily: "Arial",
             boxSizing: "border-box",   // ensures padding doesn’t shift width
+            marginLeft: "500px",
         }}
 
       >
