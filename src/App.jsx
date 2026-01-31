@@ -19,7 +19,7 @@ export default function App() {
     setOutput("");
 
     try {
-      const response = await fetch("https://samba-diameter-otherwise-timber.trycloudflare.com/", {
+      const response = await fetch("https://samba-diameter-otherwise-timber.trycloudflare.com/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
