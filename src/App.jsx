@@ -183,7 +183,7 @@ export default function App() {
         paddingLeft: "30px",
         paddingRight: "30px",
       }}>
-        <img src="/public/snapcopyLogo.png" alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+        <img src="/snapcopyLogo.png" alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
       </div>
 
       {/* --- Mode Buttons --- */}
