@@ -169,13 +169,12 @@ export default function App() {
       {/* --- Logo Placeholder --- */}
       <div style={{
         width: 250,                    // ← Made logo smaller
-  height: 250,
-  marginBottom: "10px",
+        height: 250,
+        marginBottom: "10px",
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
         overflow: "hidden",
-        marginBottom: "5px",
         color: "white",
         fontWeight: "700",
         fontSize: "14px",
@@ -184,7 +183,7 @@ export default function App() {
         paddingLeft: "30px",
         paddingRight: "30px",
       }}>
-        <img src="/snapcopyLogo.png" alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+        <img src="images/snapcopyLogo.png" alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
       </div>
 
       {/* --- Mode Buttons --- */}
