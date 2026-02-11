@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import snapcopyLogo from './assets/snapcopyLogo.png';
 export default function App() {
   // --- MODE SWITCH ---
   const [mode, setMode] = useState("about");
