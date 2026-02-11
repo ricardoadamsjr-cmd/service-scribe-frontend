@@ -1,5 +1,5 @@
 import { useState } from "react";
-import snapcopyLogo from 'assets/snapcopyLogo.png';
+import snapcopyLogo from "./assets/snapcopyLogo.png";
 export default function App() {
   // --- MODE SWITCH ---
   const [mode, setMode] = useState("about");
@@ -165,16 +165,16 @@ export default function App() {
         overflow: "hidden",
         paddingBottom: "20px",
       }}>
-        <img
-          src={snapcopyLogo}
+       <img
+          src={snapcopyLogo} 
           alt="SnapCopy Logo"
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
             borderRadius: "50%"
-          }}
-        />
+        }}
+    />
       </div>
 
       {/* --- Mode Buttons --- */}
