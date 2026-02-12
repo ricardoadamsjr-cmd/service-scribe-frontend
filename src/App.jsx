@@ -1,19 +1,19 @@
 import { useState } from "react";
 // 1. Import routing components
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import snapcopyLogo from "./assets/snapcopyLogo.png";
 
-/** * NOTE: Ensure your file is located at src/pages/businessTools/onboarding.jsx
- * If it is inside the assets folder, use the path below.
+import Onboarding from "./pages/onboarding.jsx";  // Make sure this path is correct
+
+/** * UPDATED IMPORT PATH:
+ * This matches your new structure: src/pages/onboarding/index.jsx
  */
-import Onboarding from "./pages/businessTools/onboarding.jsx";
+import Onboarding from "./pages/index.jsx";
 
 /**
  * MAIN TOOL COMPONENT
- * This contains all your original logic and the orange button.
  */
 function SnapCopyTool() {
-  const navigate = useNavigate(); // Use this for internal routing
+  const navigate = useNavigate(); 
 
   // --- MODE SWITCH ---
   const [mode, setMode] = useState("about");
@@ -126,19 +126,16 @@ function SnapCopyTool() {
       fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
     }}>
 
-      {/* --- Logo --- */}
       <div style={{ width: 250, height: 250, display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden", paddingBottom: "20px" }}>
         <img src={snapcopyLogo} alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
       </div>
 
-      {/* --- Mode Buttons --- */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "25px", width: "100%", maxWidth: 500 }}>
         <button onClick={() => handleModeSwitch("about")} style={{ flex: 1, padding: "12px", background: mode === "about" ? colors.deepBlue : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>About Us</button>
         <button onClick={() => handleModeSwitch("responder")} style={{ flex: 1, padding: "12px", background: mode === "responder" ? colors.purple : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Responder</button>
         <button onClick={() => handleModeSwitch("sentiment")} style={{ flex: 1, padding: "12px", background: mode === "sentiment" ? colors.darkSlate : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Sentiment</button>
       </div>
 
-      {/* --- Main Card --- */}
       <div style={{ width: "100%", maxWidth: 500, background: "white", padding: "40px", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.08)" }}>
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
           <h1 style={{ fontSize: "36px", margin: 0, fontWeight: "800", background: `linear-gradient(to right, ${colors.deepBlue}, ${colors.purple})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -152,7 +149,6 @@ function SnapCopyTool() {
           </p>
         </div>
 
-        {/* --- FORMS --- */}
         {mode === "about" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <InputField label="Industry" value={industry} onChange={setIndustry} placeholder="HVAC, Roofing..." colors={colors} getInputStyle={getInputStyle} />
@@ -211,9 +207,8 @@ function SnapCopyTool() {
         )}
       </div>
 
-      {/* --- BUSINESS TOOLS BUTTON --- */}
       <button
-        onClick={() => navigate("/onboarding")} 
+        onClick={() => navigate("onboarding")} 
         style={{
           width: "100%", maxWidth: 500, padding: "14px", background: colors.orange, color: "white",
           border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "700", cursor: "pointer",
@@ -231,7 +226,6 @@ function SnapCopyTool() {
 
 /**
  * 3. ROUTER COMPONENT
- * This wraps your app to enable multiple pages.
  */
 export default function App() {
   return (

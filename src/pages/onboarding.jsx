@@ -1,5 +1,6 @@
+// src/pages/onboarding.jsx
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Essential for the "Back" button
+import { useNavigate } from "react-router-dom";
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -138,18 +139,15 @@ export default function Onboarding() {
     }}>
 
       {/* --- BACK BUTTON --- */}
-      <div style={{ width: "100%", maxWidth: 800 }}>
-        <button 
-            onClick={() => navigate("/")}
-            style={{
-            alignSelf: "flex-start", marginBottom: "20px", background: "#ffffff", border: `1px solid ${colors.lightGray}`,
-            color: "#4a5568", cursor: "pointer", fontWeight: "600", fontSize: "14px", display: "flex", 
-            alignItems: "center", gap: "5px", padding: "8px 12px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-            }}
-        >
-            ← Back to Main Tool
-        </button>
-      </div>
+      <button 
+        onClick={() => navigate("/")}
+        style={{
+          alignSelf: "flex-start", marginBottom: "20px", background: "none", border: "none",
+          color: "#4a5568", cursor: "pointer", fontWeight: "600", fontSize: "14px", display: "flex", alignItems: "center", gap: "5px"
+        }}
+      >
+        ← Back to Main Tool
+      </button>
 
       {/* --- Header --- */}
       <div style={{ textAlign: "center", marginBottom: "25px" }}>
