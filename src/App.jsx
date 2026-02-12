@@ -1,20 +1,30 @@
 import { useState } from "react";
+// 1. Import routing components
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import snapcopyLogo from "./assets/snapcopyLogo.png";
-export default function App() {
+
+/** * NOTE: Ensure your file is located at src/pages/businessTools/onboarding.jsx
+ * If it is inside the assets folder, use the path below.
+ */
+import Onboarding from "./pages/businessTools/onboarding.jsx";
+
+/**
+ * MAIN TOOL COMPONENT
+ * This contains all your original logic and the orange button.
+ */
+function SnapCopyTool() {
+  const navigate = useNavigate(); // Use this for internal routing
+
   // --- MODE SWITCH ---
   const [mode, setMode] = useState("about");
 
-  // --- ABOUT US FORM STATE ---
+  // --- FORM STATE ---
   const [industry, setIndustry] = useState("");
   const [city, setCity] = useState("");
   const [years, setYears] = useState("");
-
-  // --- RESPONDER FORM STATE ---
   const [originalPost, setOriginalPost] = useState("");
   const [comment, setComment] = useState("");
   const [tone, setTone] = useState("");
-
-  // --- SENTIMENT FORM STATE ---
   const [rawComments, setRawComments] = useState("");
 
   // --- SHARED STATE ---
@@ -27,11 +37,19 @@ export default function App() {
     logobackground: "#592e72",
     deepBlue: "#860aa5",
     purple: "#390b64",
-    darkSlate: "#2d3748", // Color for the new tab
+    darkSlate: "#2d3748",
     lightGray: "#e2e8f0",
     textDark: "#1a202c",
     errorRed: "#e53e3e",
-    successGreen: "#38a169"
+    successGreen: "#38a169",
+    orange: "#f97316",
+    orangeHover: "#ea580c"
+  };
+
+  const descriptions = {
+    about: "Craft a professional business bio that builds trust with your local audience.",
+    responder: "Generate thoughtful, high-engagement replies to social media comments in seconds.",
+    sentiment: "Analyze messy comment sections to identify customer feelings and key feedback trends."
   };
 
   const inputStyle = {
@@ -52,25 +70,14 @@ export default function App() {
     boxShadow: isFocused ? `0 0 0 3px ${colors.deepBlue}33` : "none",
   });
 
-  // --- HANDLE MODE SWITCH ---
   const handleModeSwitch = (newMode) => {
-    // Clear all form fields
-    setIndustry("");
-    setCity("");
-    setYears("");
-    setOriginalPost("");
-    setComment("");
-    setTone("");
-    setRawComments("");
-    setOutput("");
-    setError("");
+    setIndustry(""); setCity(""); setYears("");
+    setOriginalPost(""); setComment(""); setTone("");
+    setRawComments(""); setOutput(""); setError("");
     setCopied(false);
-    
-    // Switch mode
     setMode(newMode);
   };
 
-  // --- COPY TO CLIPBOARD ---
   const copyToClipboard = async () => {
     if (!output) return;
     try {
@@ -82,41 +89,18 @@ export default function App() {
     }
   };
 
-  // --- MAIN GENERATE FUNCTION ---
   async function generate() {
-    setOutput("");
-    setError("");
-    setCopied(false);
+    setOutput(""); setError(""); setCopied(false);
     
-    // Validation
-    if (mode === "about") {
-      if (!industry.trim() || !city.trim() || !years.trim()) {
-        setError("Please fill out all About Us fields");
-        return;
-      }
-    } else if (mode === "responder") {
-      if (!originalPost.trim() || !comment.trim() || !tone.trim()) {
-        setError("Please fill out all Responder fields");
-        return;
-      }
-    } else if (mode === "sentiment") {
-      if (!rawComments.trim()) {
-        setError("Please paste the page content or comments");
-        return;
-      }
-    }
+    if (mode === "about" && (!industry.trim() || !city.trim() || !years.trim())) return setError("Fill out all About Us fields");
+    if (mode === "responder" && (!originalPost.trim() || !comment.trim() || !tone.trim())) return setError("Fill out all Responder fields");
+    if (mode === "sentiment" && !rawComments.trim()) return setError("Please paste the content");
     
     setLoading(true);
-
     let payload = { mode };
-
-    if (mode === "about") {
-      payload = { ...payload, industry, city, years };
-    } else if (mode === "responder") {
-      payload = { ...payload, originalPost, comment, tone };
-    } else {
-      payload = { ...payload, rawComments };
-    }
+    if (mode === "about") payload = { ...payload, industry, city, years };
+    else if (mode === "responder") payload = { ...payload, originalPost, comment, tone };
+    else payload = { ...payload, rawComments };
 
     try {
       const response = await fetch("http://localhost:3000/generate", {
@@ -124,16 +108,10 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || `Server error: ${response.status}`);
-
-      // Map response to correct state based on mode
+      if (!response.ok) throw new Error(data.error || "Server error");
       const result = mode === "about" ? data.about : (mode === "responder" ? data.reply : data.sentiment);
-      
-      if (!result) throw new Error("No response received from AI");
       setOutput(result);
-
     } catch (err) {
       setError(err.message || "Could not reach the AI backend.");
     } finally {
@@ -143,78 +121,34 @@ export default function App() {
 
   return (
     <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      minHeight: "100vh",
-      width: "100vw",
-      background: "#f0f2f5",
-      padding: "20px",
-      paddingTop: "10px",
-      boxSizing: "border-box",
+      display: "flex", flexDirection: "column", alignItems: "center", minHeight: "100vh", width: "100vw",
+      background: "#f0f2f5", padding: "20px", paddingTop: "10px", boxSizing: "border-box",
       fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
     }}>
 
       {/* --- Logo --- */}
-      <div style={{
-        width: 250,
-        height: 250,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        paddingBottom: "20px",
-      }}>
-       <img
-          src={snapcopyLogo} 
-          alt="SnapCopy Logo"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: "50%"
-        }}
-    />
+      <div style={{ width: 250, height: 250, display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden", paddingBottom: "20px" }}>
+        <img src={snapcopyLogo} alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
       </div>
 
       {/* --- Mode Buttons --- */}
-      <div style={{
-        display: "flex",
-        gap: "10px",
-        marginBottom: "25px",
-        width: "100%",
-        maxWidth: 500
-      }}>
-        <button onClick={() => handleModeSwitch("about")} style={{ flex: 1, padding: "12px", background: mode === "about" ? colors.deepBlue : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>About Us</button>
-        <button onClick={() => handleModeSwitch("responder")} style={{ flex: 1, padding: "12px", background: mode === "responder" ? colors.purple : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>Responder</button>
-        <button onClick={() => handleModeSwitch("sentiment")} style={{ flex: 1, padding: "12px", background: mode === "sentiment" ? colors.darkSlate : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>Sentiment</button>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "25px", width: "100%", maxWidth: 500 }}>
+        <button onClick={() => handleModeSwitch("about")} style={{ flex: 1, padding: "12px", background: mode === "about" ? colors.deepBlue : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>About Us</button>
+        <button onClick={() => handleModeSwitch("responder")} style={{ flex: 1, padding: "12px", background: mode === "responder" ? colors.purple : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Responder</button>
+        <button onClick={() => handleModeSwitch("sentiment")} style={{ flex: 1, padding: "12px", background: mode === "sentiment" ? colors.darkSlate : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Sentiment</button>
       </div>
 
       {/* --- Main Card --- */}
-      <div style={{
-        width: "100%",
-        maxWidth: 500,
-        background: "white",
-        padding: "40px",
-        borderRadius: "20px",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
-      }}>
-
-        {/* --- Title --- */}
+      <div style={{ width: "100%", maxWidth: 500, background: "white", padding: "40px", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.08)" }}>
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
-          <h1 style={{
-            fontSize: "36px",
-            margin: 0,
-            fontWeight: "800",
-            background: `linear-gradient(to right, ${colors.deepBlue}, ${colors.purple})`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            letterSpacing: "-1px"
-          }}>
+          <h1 style={{ fontSize: "36px", margin: 0, fontWeight: "800", background: `linear-gradient(to right, ${colors.deepBlue}, ${colors.purple})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             {mode === "about" ? "About Us Snap" : mode === "responder" ? "Responder Snap" : "Sentiment Snap"}
           </h1>
-          <p style={{ fontSize: "12px", fontWeight: "bold", color: colors.deepBlue, textTransform: "uppercase", letterSpacing: "2px", marginTop: "0px" }}>
+          <p style={{ fontSize: "12px", fontWeight: "bold", color: colors.deepBlue, textTransform: "uppercase", letterSpacing: "2px", marginTop: "4px" }}>
             {mode === "sentiment" ? "AI Feedback Analysis" : "AI Powered Content"}
+          </p>
+          <p style={{ fontSize: "14px", color: "#718096", lineHeight: "1.5", margin: "10px auto 0", maxWidth: "90%" }}>
+            {descriptions[mode]}
           </p>
         </div>
 
@@ -241,29 +175,19 @@ export default function App() {
             <textarea
               value={rawComments}
               onChange={(e) => setRawComments(e.target.value)}
-              placeholder="Paste everything here. AI will filter the noise and find the comments..."
+              placeholder="Paste everything here..."
               style={{ ...inputStyle, height: "150px", resize: "none" }}
             />
           </div>
         )}
 
-        {/* --- SUBMIT BUTTON --- */}
         <button
           onClick={generate}
           disabled={loading}
           style={{
-            width: "100%",
-            padding: "15px",
-            background: `linear-gradient(135deg, ${colors.deepBlue}, ${colors.purple})`,
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            fontSize: "16px",
-            fontWeight: "600",
-            cursor: loading ? "not-allowed" : "pointer",
-            marginTop: "20px",
-            boxShadow: "0 4px 15px rgba(94, 79, 162, 0.3)",
-            opacity: loading ? 0.7 : 1
+            width: "100%", padding: "15px", background: `linear-gradient(135deg, ${colors.deepBlue}, ${colors.purple})`,
+            color: "white", border: "none", borderRadius: "10px", fontSize: "16px", fontWeight: "600",
+            cursor: loading ? "not-allowed" : "pointer", marginTop: "20px"
           }}
         >
           {loading ? "Analyzing..." : "Run Snap"}
@@ -271,7 +195,6 @@ export default function App() {
 
         {error && <div style={{ color: colors.errorRed, marginTop: "15px", textAlign: "center", fontSize: "14px", fontWeight: "600", backgroundColor: "#fff5f5", padding: "10px", borderRadius: "8px" }}>{error}</div>}
 
-        {/* --- OUTPUT --- */}
         {output && (
           <div style={{ marginTop: "30px", borderTop: `1px solid ${colors.lightGray}`, paddingTop: "20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
@@ -281,14 +204,43 @@ export default function App() {
               </button>
             </div>
             <textarea
-              value={output}
-              readOnly
+              value={output} readOnly
               style={{ width: "100%", height: "180px", padding: "15px", borderRadius: "12px", border: `1px solid ${colors.lightGray}`, backgroundColor: "#f8fafc", fontSize: "14px", lineHeight: "1.6", color: colors.textDark, resize: "none", boxSizing: "border-box" }}
             />
           </div>
         )}
       </div>
+
+      {/* --- BUSINESS TOOLS BUTTON --- */}
+      <button
+        onClick={() => navigate("/onboarding")} 
+        style={{
+          width: "100%", maxWidth: 500, padding: "14px", background: colors.orange, color: "white",
+          border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "700", cursor: "pointer",
+          marginTop: "25px", boxShadow: "0 4px 14px rgba(249, 115, 22, 0.4)", transition: "0.2s"
+        }}
+        onMouseOver={(e) => e.target.style.background = colors.orangeHover}
+        onMouseOut={(e) => e.target.style.background = colors.orange}
+      >
+        Access Business Tools & Strategy →
+      </button>
+
     </div>
+  );
+}
+
+/**
+ * 3. ROUTER COMPONENT
+ * This wraps your app to enable multiple pages.
+ */
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SnapCopyTool />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
@@ -298,12 +250,8 @@ function InputField({ label, value, onChange, placeholder, type = "text", colors
     <div>
       <label style={{ fontSize: "14px", fontWeight: "600", color: "#4a5568" }}>{label}</label>
       <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        type={type} value={value} onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         style={getInputStyle(focused)}
       />
     </div>
