@@ -1,5 +1,7 @@
 import { useState } from "react";
 import snapcopyLogo from "./assets/snapcopyLogo.png";
+// --- NEW: Imported AirStadt Business Logo ---
+import airStadtLogo from "./assets/AirStadt_logo orange.png";
 
 export default function App() {
   // --- MODE SWITCH ---
@@ -28,11 +30,12 @@ export default function App() {
     logobackground: "#592e72",
     deepBlue: "#860aa5",
     purple: "#390b64",
-    darkSlate: "#2d3748", // Color for the new tab
+    darkSlate: "#2d3748", 
     lightGray: "#e2e8f0",
     textDark: "#1a202c",
     errorRed: "#e53e3e",
-    successGreen: "#38a169"
+    successGreen: "#38a169",
+    footerText: "#718096" // Added a soft grey for the footer text
   };
 
   const inputStyle = {
@@ -55,7 +58,6 @@ export default function App() {
 
   // --- HANDLE MODE SWITCH ---
   const handleModeSwitch = (newMode) => {
-    // Clear all form fields
     setIndustry("");
     setCity("");
     setYears("");
@@ -66,12 +68,10 @@ export default function App() {
     setOutput("");
     setError("");
     setCopied(false);
-    
-    // Switch mode
     setMode(newMode);
   };
 
-  // --- COPY TO CLIPBOARD ---e
+  // --- COPY TO CLIPBOARD ---
   const copyToClipboard = async () => {
     if (!output) return;
     try {
@@ -89,7 +89,6 @@ export default function App() {
     setError("");
     setCopied(false);
     
-    // Validation
     if (mode === "about") {
       if (!industry.trim() || !city.trim() || !years.trim()) {
         setError("Please fill out all About Us fields");
@@ -110,7 +109,6 @@ export default function App() {
     setLoading(true);
 
     let payload = { mode };
-
     if (mode === "about") {
       payload = { ...payload, industry, city, years };
     } else if (mode === "responder") {
@@ -120,19 +118,16 @@ export default function App() {
     }
 
     try {
-        const response = await fetch("https://api.snapcopy.online/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-        });
-
+      const response = await fetch("https://api.snapcopy.online/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || `Server error: ${response.status}`);
 
-      // Map response to correct state based on mode
       const result = mode === "about" ? data.about : (mode === "responder" ? data.reply : data.sentiment);
-      
       if (!result) throw new Error("No response received from AI");
       setOutput(result);
 
@@ -148,7 +143,7 @@ export default function App() {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      minHeight: "100vh",
+      minHeight: "100vh", // Ensures the container fills the screen
       width: "100vw",
       background: "#f0f2f5",
       padding: "20px",
@@ -157,27 +152,27 @@ export default function App() {
       fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
     }}>
 
-  {/* --- Logo --- */}
-<div style={{
-  width: 250,
-  height: 250,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  overflow: "hidden",
-  paddingBottom: "20px",
-}}>
-  <img 
-    src={snapcopyLogo} 
-    alt="SnapCopy Logo" 
-    style={{
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      borderRadius: "50%"
-    }}
-  />
-</div>
+      {/* --- App Logo Section --- */}
+      <div style={{
+        width: 250,
+        height: 250,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "hidden",
+        paddingBottom: "20px",
+      }}>
+        <img 
+          src={snapcopyLogo} 
+          alt="SnapCopy Logo" 
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "50%"
+          }}
+        />
+      </div>
 
       {/* --- Mode Buttons --- */}
       <div style={{
@@ -200,9 +195,8 @@ export default function App() {
         padding: "40px",
         borderRadius: "20px",
         boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+        marginBottom: "40px" // Space before footer
       }}>
-
-        {/* --- Title --- */}
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
           <h1 style={{
             fontSize: "36px",
@@ -219,8 +213,53 @@ export default function App() {
             {mode === "sentiment" ? "AI Feedback Analysis" : "AI Powered Content"}
           </p>
         </div>
+            {/* INSTRUCTION BLOCK HERE: */}
+        {mode === "about" && (
+          <div style={{
+            backgroundColor: "#f0f4fa",
+            padding: "15px",
+            borderRadius: "10px",
+            border: `1px solid ${colors.deepBlue}22`,
+            marginBottom: "20px",
+            textAlign: "center"
+          }}>
+            <p style={{ fontSize: "14px", color: colors.textDark, lineHeight: "1.5", margin: 0, fontWeight: "500" }}>
+              Fill out the fields and get a custom snippet about your company or your experience for emails, websites, or social media posts.
+            </p>
+          </div>
+        )}
 
-        {/* --- FORMS --- */}
+        {mode === "responder" && (
+          <div style={{
+            backgroundColor: "#f0f4fa", // Light blue tint
+            padding: "15px",
+            borderRadius: "10px",
+            border: `1px solid ${colors.purple}22`,
+            marginBottom: "20px",
+            textAlign: "center"
+          }}>
+            <p style={{ fontSize: "14px", color: colors.textDark, lineHeight: "1.5", margin: 0, fontWeight: "500" }}>
+              To reply to a <strong>specific comment</strong>, paste the original post and that comment. To reply <strong>directly to the post</strong>, leave the second field blank.
+            </p>
+          </div>
+        )}
+
+        {mode === "sentiment" && (
+          <div style={{
+            backgroundColor: "#f0f4fa", // Light blue tint
+            padding: "15px",
+            borderRadius: "10px",
+            border: `1px solid ${colors.darkSlate}22`,
+            marginBottom: "20px",
+            textAlign: "center"
+          }}>
+            <p style={{ fontSize: "14px", color: colors.textDark, lineHeight: "1.5", margin: 0, fontWeight: "500" }}>
+              Drag and copy all the comments from a post and paste them here. The AI will automatically sort out the noise and analyze the feedback for you.
+            </p>
+          </div>
+        )}
+          {/*END INSTRUCTION BLOCK HERE: */}
+
         {mode === "about" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <InputField label="Industry" value={industry} onChange={setIndustry} placeholder="HVAC, Roofing..." colors={colors} getInputStyle={getInputStyle} />
@@ -229,6 +268,8 @@ export default function App() {
           </div>
         )}
 
+
+  
         {mode === "responder" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <InputField label="Original Post" value={originalPost} onChange={setOriginalPost} placeholder="Paste original post..." colors={colors} getInputStyle={getInputStyle} />
@@ -249,7 +290,6 @@ export default function App() {
           </div>
         )}
 
-        {/* --- SUBMIT BUTTON --- */}
         <button
           onClick={generate}
           disabled={loading}
@@ -273,7 +313,6 @@ export default function App() {
 
         {error && <div style={{ color: colors.errorRed, marginTop: "15px", textAlign: "center", fontSize: "14px", fontWeight: "600", backgroundColor: "#fff5f5", padding: "10px", borderRadius: "8px" }}>{error}</div>}
 
-        {/* --- OUTPUT --- */}
         {output && (
           <div style={{ marginTop: "30px", borderTop: `1px solid ${colors.lightGray}`, paddingTop: "20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
@@ -290,6 +329,33 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* --- NEW: FOOTER SECTION --- */}
+      <footer style={{
+        marginTop: "auto", // Pushes footer to bottom of flex container
+        width: "100%",
+        maxWidth: 500,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "10px",
+        padding: "20px 0",
+        borderTop: `1px solid ${colors.lightGray}88`
+      }}>
+        <img 
+          src={airStadtLogo} 
+          alt="AirStadt Business Logo" 
+          style={{ height: "30px", width: "auto" }} 
+        />
+        <p style={{ 
+          fontSize: "13px", 
+          color: colors.footerText, 
+          margin: 0,
+          fontWeight: "500"
+        }}>
+          &copy; {new Date().getFullYear()} AirStadt. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 }
