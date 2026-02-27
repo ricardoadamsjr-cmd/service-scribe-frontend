@@ -71,7 +71,7 @@ export default function App() {
     setMode(newMode);
   };
 
-  // --- COPY TO CLIPBOARD ---
+  // --- COPY TO CLIPBOARD ---e
   const copyToClipboard = async () => {
     if (!output) return;
     try {
@@ -120,7 +120,7 @@ export default function App() {
     }
 
     try {
-        const response = await fetch("http://ai.snapcopy.online/generate", {
+        const response = await fetch("https://ai.snapcopy.com/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
