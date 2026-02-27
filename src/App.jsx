@@ -120,7 +120,7 @@ export default function App() {
     }
 
     try {
-        const response = await fetch("https://ai.snapcopy.com/generate", {
+        const response = await fetch("https://snapcopy.online/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
