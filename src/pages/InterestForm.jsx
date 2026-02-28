@@ -17,7 +17,7 @@ export default function InterestForm() {
     companySize: "",
     primaryUseCase: "",
     accessLevel: "",
-    additionalNotes: ""
+    additionalNotes: "" // State for the comment field
   });
 
   const handleSubmit = async (e) => {
@@ -39,7 +39,7 @@ export default function InterestForm() {
   };
 
   const fieldStyle = {
-    padding: "10px",
+    padding: "12px",
     borderRadius: "8px",
     border: "1px solid #cbd5e0",
     fontSize: "15px",
@@ -47,158 +47,216 @@ export default function InterestForm() {
     boxSizing: "border-box"
   };
 
+  const sectionHeaderStyle = {
+    color: "#860aa5",
+    fontSize: "22px",
+    marginBottom: "15px",
+    fontWeight: "700"
+  };
+
+  const listItemStyle = {
+    marginBottom: "8px",
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "10px"
+  };
+
   return (
-    /* 1. MAIN OUTER WRAPPER: Handles horizontal and vertical centering */
     <div style={{
       display: "flex",
-      justifyContent: "center",
+      flexDirection: "column",
+      alignItems: "center",
       width: "100%",
-      minHeight: "100vh",       
+      minHeight: "100vh",
       backgroundColor: "#f7fafc",
       fontFamily: "'Segoe UI', Roboto, sans-serif",
       boxSizing: "border-box",
-      paddingLeft: "20px",    
-      marginLeft: "50%", 
-      marginRight: "100%"
+      // REDUCED RIGHT MARGIN: padding changed from 80px 80px to 80px 20px
+      padding: "80px 20px 80px 80px" 
     }}>
 
-      {/* 2. CONTENT WRAPPER: Limits width and keeps everything aligned */}
+      {/* --- PAGE TITLE --- */}
+      <div style={{ textAlign: "center", marginBottom: "60px", maxWidth: "900px" }}>
+        <h1 style={{ fontSize: "42px", fontWeight: "800", color: "#2d3748", marginBottom: "15px" }}>
+          Partner With Us for Smarter Business Solutions
+        </h1>
+        <div style={{ width: "80px", height: "5px", background: "#860aa5", margin: "0 auto", borderRadius: "10px" }}></div>
+      </div>
+
       <div style={{
-        maxWidth: "800px",
+        maxWidth: "1150px", 
         width: "100%",
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center" // Ensures the header stays centered over the form
+        flexWrap: "wrap", 
+        gap: "60px",
+        alignItems: "flex-start",
+        justifyContent: "center"
       }}>
 
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <h2 style={{ fontSize: "32px", color: "#860aa5", marginBottom: "10px" }}>
-            Exclusive Access & Custom Solutions
-          </h2>
-          <p style={{ color: "#718096", lineHeight: "1.6" }}>
-            We are currently scaling our specialized AI toolsets. Fill out the details below to join our 
-            priority waitlist for private access, enterprise features, or custom SaaS development.
-          </p>
+        {/* LEFT COLUMN: The Form */}
+        <div style={{ flex: "1 1 550px", maxWidth: "650px" }}>
+          <div style={{ marginBottom: "30px" }}>
+            <h2 style={{ fontSize: "28px", color: "#860aa5", marginBottom: "10px" }}>
+              Exclusive Access & Custom Solutions
+            </h2>
+            <p style={{ color: "#718096", lineHeight: "1.6" }}>
+              Join our priority waitlist for private tool access, enterprise features, or custom SaaS development.
+            </p>
+          </div>
+
+          <form 
+            onSubmit={handleSubmit}
+            style={{ 
+              display: "grid", 
+              gridTemplateColumns: "1fr 1fr", 
+              gap: "20px",
+              background: "white",
+              padding: "40px",
+              borderRadius: "15px",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
+              width: "100%",
+              boxSizing: "border-box"
+            }}
+          >
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Full Name *</label>
+              <input required style={fieldStyle} placeholder="John Doe" 
+                onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Email Address *</label>
+              <input type="email" required style={fieldStyle} placeholder="john@company.com" 
+                onChange={(e) => setFormData({...formData, email: e.target.value})} />
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Phone Number</label>
+              <input style={fieldStyle} placeholder="(555) 000-0000" 
+                onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Company Name</label>
+              <input style={fieldStyle} placeholder="Acme Corp" 
+                onChange={(e) => setFormData({...formData, companyName: e.target.value})} />
+            </div>
+
+            <div style={{ gridColumn: "span 2" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Website or Social Link</label>
+              <input style={fieldStyle} placeholder="https://..." 
+                onChange={(e) => setFormData({...formData, website: e.target.value})} />
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Business Type</label>
+              <select required style={fieldStyle} onChange={(e) => setFormData({...formData, businessType: e.target.value})}>
+                <option value="">Select Industry...</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Consulting">Consulting</option>
+                <option value="Trades">Trades (HVAC, Roofing, etc.)</option>
+                <option value="E-commerce">E-commerce</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Company Size</label>
+              <select required style={fieldStyle} onChange={(e) => setFormData({...formData, companySize: e.target.value})}>
+                <option value="">Select Size...</option>
+                <option value="Solo">Solo</option>
+                <option value="2-5">2–5 employees</option>
+                <option value="6-20">6–20 employees</option>
+                <option value="21-50">21–50 employees</option>
+                <option value="51+">51+ employees</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Primary Use Case</label>
+              <select required style={fieldStyle} onChange={(e) => setFormData({...formData, primaryUseCase: e.target.value})}>
+                <option value="">Select Use Case...</option>
+                <option value="Content creation">Content Creation</option>
+                <option value="Automation">Process Automation</option>
+                <option value="Onboarding">Client Onboarding</option>
+                <option value="Customer communication">Customer Communication</option>
+                <option value="Analytics">Data Analytics</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Access Level Interest</label>
+              <select required style={fieldStyle} onChange={(e) => setFormData({...formData, accessLevel: e.target.value})}>
+                <option value="">Select Interest...</option>
+                <option value="Private Single Tool">Private Single Tool</option>
+                <option value="Full Access">Full Access to All Tools</option>
+                <option value="Enterprise">Enterprise-Level Access</option>
+                <option value="Not Sure">Not Sure Yet</option>
+              </select>
+            </div>
+
+            {/* ADDED COMMENT FIELD */}
+            <div style={{ gridColumn: "span 2" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Additional Comments or Specific Needs</label>
+              <textarea 
+                style={{ ...fieldStyle, height: "100px", resize: "none" }} 
+                placeholder="Tell us a bit more about what you're looking for..."
+                onChange={(e) => setFormData({...formData, additionalNotes: e.target.value})}
+              />
+            </div>
+
+            <div style={{ gridColumn: "span 2", marginTop: "20px" }}>
+              <button 
+                type="submit" 
+                disabled={loading}
+                style={{ 
+                  width: "100%", padding: "15px", background: "#860aa5", color: "white", 
+                  border: "none", borderRadius: "8px", fontSize: "16px", fontWeight: "bold", 
+                  cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 4px 12px rgba(134, 10, 165, 0.2)"
+                }}
+              >
+                {loading ? "Registering Interest..." : "Join Priority Waitlist"}
+              </button>
+              <button type="button" onClick={() => navigate("/")} style={{ width: "100%", background: "none", border: "none", color: "#718096", marginTop: "15px", cursor: "pointer", textDecoration: "underline" }}>
+                Return to Tools
+              </button>
+            </div>
+          </form>
         </div>
 
-        <form 
-          onSubmit={handleSubmit}
-          style={{ 
-            display: "grid", 
-            gridTemplateColumns: "1fr 1fr", 
-            gap: "20px",
-            background: "white",
-            padding: "40px",
-            borderRadius: "15px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-            width: "100%",
-            boxSizing: "border-box"
-          }}
-        >
-          {/* Form Fields */}
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Full Name *</label>
-            <input required style={fieldStyle} placeholder="John Doe" 
-              onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
-          </div>
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Email Address *</label>
-            <input type="email" required style={fieldStyle} placeholder="john@company.com" 
-              onChange={(e) => setFormData({...formData, email: e.target.value})} />
+        {/* RIGHT COLUMN: The Why AI Text */}
+        <div style={{ 
+          flex: "1 1 350px", 
+          maxWidth: "450px",
+          padding: "30px", 
+          backgroundColor: "#ffffff", 
+          borderRadius: "15px", 
+          boxShadow: "0 4px 15px rgba(0,0,0,0.03)",
+          color: "#2d3748",
+          marginTop: "20px"
+        }}>
+          <h3 style={sectionHeaderStyle}>Sign up for Micro SaaS Access</h3>
+          <p style={{ lineHeight: "1.6", marginBottom: "20px" }}>
+            What's a AI Micro SaaS. Simply put, it's a small, focused software product that solves a specific problem. Think of it as a tiny but mighty tool designed to make your business life easier.
+          </p>
+
+          <div style={{ backgroundColor: "#f8fafc", padding: "20px", borderRadius: "10px", marginBottom: "25px" }}>
+            <div style={listItemStyle}><strong>First-</strong> lets take one step back. what's a SaaS?</div>
+            <div style={listItemStyle}><strong>Acronym-</strong>Software as a Service.</div>
+            <div style={listItemStyle}><strong>AI-</strong>Integreated with Artificial Intellegence</div>
           </div>
 
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Phone Number</label>
-            <input style={fieldStyle} placeholder="(555) 000-0000" 
-              onChange={(e) => setFormData({...formData, phone: e.target.value})} />
-          </div>
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Company Name</label>
-            <input style={fieldStyle} placeholder="Acme Corp" 
-              onChange={(e) => setFormData({...formData, companyName: e.target.value})} />
-          </div>
+          <h3 style={sectionHeaderStyle}>Where AI Actually Helps</h3>
+          <ul style={{ listStyle: "none", padding: 0, marginBottom: "25px" }}>
+            <li style={listItemStyle}>✨ <strong>Content writing:</strong> Emails and social posts</li>
+            <li style={listItemStyle}>💬 <strong>Customer service:</strong> Smart chat tools</li>
+            <li style={listItemStyle}>📊 <strong>Decision-making:</strong> Data-driven insights</li>
+            <li style={listItemStyle}>🚀 <strong>Marketing:</strong> Automated campaigns</li>
+          </ul>
 
-          <div style={{ gridColumn: "span 2" }}>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Website or Social Link</label>
-            <input style={fieldStyle} placeholder="https://..." 
-              onChange={(e) => setFormData({...formData, website: e.target.value})} />
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Business Type</label>
-            <select required style={fieldStyle} onChange={(e) => setFormData({...formData, businessType: e.target.value})}>
-              <option value="">Select Industry...</option>
-              <option value="Real Estate">Real Estate</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Consulting">Consulting</option>
-              <option value="Trades">Trades (HVAC, Roofing, etc.)</option>
-              <option value="E-commerce">E-commerce</option>
-              <option value="Healthcare">Healthcare</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Company Size</label>
-            <select required style={fieldStyle} onChange={(e) => setFormData({...formData, companySize: e.target.value})}>
-              <option value="">Select Size...</option>
-              <option value="Solo">Solo</option>
-              <option value="2-5">2–5 employees</option>
-              <option value="6-20">6–20 employees</option>
-              <option value="21-50">21–50 employees</option>
-              <option value="51+">51+ employees</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Primary Use Case</label>
-            <select required style={fieldStyle} onChange={(e) => setFormData({...formData, primaryUseCase: e.target.value})}>
-              <option value="">Select Use Case...</option>
-              <option value="Content creation">Content Creation</option>
-              <option value="Automation">Process Automation</option>
-              <option value="Onboarding">Client Onboarding</option>
-              <option value="Customer communication">Customer Communication</option>
-              <option value="Analytics">Data Analytics</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Access Level Interest</label>
-            <select required style={fieldStyle} onChange={(e) => setFormData({...formData, accessLevel: e.target.value})}>
-              <option value="">Select Interest...</option>
-              <option value="Private Single Tool">Private Access to a Single Tool</option>
-              <option value="Full Access">Full Access to All Tools</option>
-              <option value="Enterprise">Enterprise-Level Access</option>
-              <option value="Not Sure">Not Sure Yet (Need Guidance)</option>
-            </select>
-          </div>
-
-          {/* Footer / Buttons */}
-          <div style={{ gridColumn: "span 2", marginTop: "20px" }}>
-            <button 
-              type="submit" 
-              disabled={loading}
-              style={{ 
-                width: "100%", padding: "15px", background: "#860aa5", color: "white", 
-                border: "none", borderRadius: "8px", fontSize: "16px", fontWeight: "bold", 
-                cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 4px 12px rgba(134, 10, 165, 0.2)"
-              }}
-            >
-              {loading ? "Registering Interest..." : "Join Priority Waitlist"}
-            </button>
-            
-            <button 
-              type="button" 
-              onClick={() => navigate("/")} 
-              style={{ 
-                width: "100%", background: "none", border: "none", color: "#718096", 
-                marginTop: "15px", cursor: "pointer", textDecoration: "underline" 
-              }}
-            >
-              Return to Tools
-            </button>
-          </div>
-        </form>
+          <h3 style={sectionHeaderStyle}>Why Get In Early?</h3>
+          <p style={{ lineHeight: "1.6" }}>
+            Half of all small businesses plan to adopt AI in the next year. Getting early access means you're ahead of them—not playing catch-up.
+          </p>
+        </div>
       </div>
     </div>
   );
