@@ -121,23 +121,23 @@ function HomePage() {
         <img src={snapcopyLogo} alt="SnapCopy Logo" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
       </div>
 
-      <Link to="/interest" style={{ textDecoration: "none", marginBottom: "20px", width: "100%", maxWidth: 500 }}>
+      <Link to="/interest" style={{ textDecoration: "none", marginBottom: "20px", width: "100%", maxWidth: 800 }}>
          <button style={{ 
            width: "100%", padding: "12px", background: "white", color: colors.deepBlue, 
            border: `2px solid ${colors.deepBlue}`, borderRadius: "8px", fontWeight: "bold", 
            cursor: "pointer", boxShadow: "0 4px 10px rgba(0,0,0,0.05)" 
          }}>
-           Interested in a custom SaaS tool? Click Here
+           Get on the list for full and custom access to SnapCopy!
          </button>
       </Link>
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "25px", width: "100%", maxWidth: 500 }}>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "25px", width: "100%", maxWidth: 800 }}>
         <button onClick={() => handleModeSwitch("about")} style={{ flex: 1, padding: "12px", background: mode === "about" ? colors.deepBlue : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>About Us</button>
         <button onClick={() => handleModeSwitch("responder")} style={{ flex: 1, padding: "12px", background: mode === "responder" ? colors.purple : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Responder</button>
         <button onClick={() => handleModeSwitch("sentiment")} style={{ flex: 1, padding: "12px", background: mode === "sentiment" ? colors.darkSlate : "#bda4c9", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Sentiment</button>
       </div>
 
-      <div style={{ width: "100%", maxWidth: 500, background: "white", padding: "40px", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.08)", marginBottom: "40px" }}>
+      <div style={{ width: "100%", maxWidth: 800, background: "white", padding: "40px", borderRadius: "20px", boxShadow: "0 20px 40px rgba(0,0,0,0.08)", marginBottom: "40px" }}>
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
           <h1 style={{ fontSize: "36px", margin: 0, fontWeight: "800", background: `linear-gradient(to right, ${colors.deepBlue}, ${colors.purple})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             {mode === "about" ? "About Us Snap" : mode === "responder" ? "Responder Snap" : "Sentiment Snap"}
