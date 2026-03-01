@@ -178,7 +178,7 @@ function HomePage() {
         )}
         {mode === "sentiment" && (
           <div style={instructionStyle}>
-            <strong>Instructions:</strong> Paste a group of comments or page content. SnapCopy will analyze the overall mood and provide key emotional insights.
+            <strong>Instructions:</strong> Drag and copy an entire page of comments. SnapCopy will filter out the junk, analyze the overall mood, and give you clear emotional insights about the post. 
           </div>
         )}
 

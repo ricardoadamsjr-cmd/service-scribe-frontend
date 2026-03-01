@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { db } from "../firebase"; 
+import { db } from "../firebase"; // The "../" moves up one folder level
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
@@ -17,15 +17,28 @@ export default function InterestForm() {
     companySize: "",
     primaryUseCase: "",
     accessLevel: "",
-    additionalNotes: "" // State for the comment field
+    additionalNotes: "",
+    hp_field: "" // [HONEYPOT STATE]
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // [HONEYPOT CHECK] If this field is filled, it's a bot. 
+    // We exit early and pretend it worked.
+    if (formData.hp_field !== "") {
+      console.warn("Bot submission detected.");
+      navigate("/");
+      return;
+    }
+
     setLoading(true);
     try {
+      // Create a clean copy of the data without the honeypot field
+      const { hp_field, ...dataToSave } = formData;
+
       await addDoc(collection(db, "leads"), {
-        ...formData,
+        ...dataToSave,
         createdAt: serverTimestamp(),
       });
       alert("Thank you for your interest! We've added you to our priority list.");
@@ -71,7 +84,6 @@ export default function InterestForm() {
       backgroundColor: "#f7fafc",
       fontFamily: "'Segoe UI', Roboto, sans-serif",
       boxSizing: "border-box",
-      // REDUCED RIGHT MARGIN: padding changed from 80px 80px to 80px 20px
       padding: "80px 20px 80px 80px" 
     }}>
 
@@ -118,6 +130,17 @@ export default function InterestForm() {
               boxSizing: "border-box"
             }}
           >
+            {/* [HONEYPOT INPUT] Hidden from humans, tempting for bots */}
+            <div style={{ display: "none" }} aria-hidden="true">
+                <input 
+                    type="text" 
+                    name="website_url_verify" 
+                    tabIndex="-1" 
+                    autoComplete="off"
+                    onChange={(e) => setFormData({...formData, hp_field: e.target.value})}
+                />
+            </div>
+
             <div>
               <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Full Name *</label>
               <input required style={fieldStyle} placeholder="John Doe" 
@@ -193,7 +216,6 @@ export default function InterestForm() {
               </select>
             </div>
 
-            {/* ADDED COMMENT FIELD */}
             <div style={{ gridColumn: "span 2" }}>
               <label style={{ display: "block", marginBottom: "5px", fontWeight: "600" }}>Additional Comments or Specific Needs</label>
               <textarea 
@@ -235,13 +257,19 @@ export default function InterestForm() {
         }}>
           <h3 style={sectionHeaderStyle}>Sign up for Micro SaaS Access</h3>
           <p style={{ lineHeight: "1.6", marginBottom: "20px" }}>
-            What's a AI Micro SaaS. Simply put, it's a small, focused software product that solves a specific problem. Think of it as a tiny but mighty tool designed to make your business life easier.
+            <strong>What is an AI Micro SaaS?</strong>
+              It is a small, focused software tool built to solve one specific problem. Think of it as a tiny but powerful product that makes your business run a little smoother.
+
           </p>
 
           <div style={{ backgroundColor: "#f8fafc", padding: "20px", borderRadius: "10px", marginBottom: "25px" }}>
-            <div style={listItemStyle}><strong>First-</strong> lets take one step back. what's a SaaS?</div>
-            <div style={listItemStyle}><strong>Acronym-</strong>Software as a Service.</div>
-            <div style={listItemStyle}><strong>AI-</strong>Integreated with Artificial Intellegence</div>
+        <p><strong>Before we go deeper, let’s take one step back.
+                What is a SaaS?</strong>
+                It stands for Software as a Service. Instead of installing software on your computer, you access it through the internet.
+                </p>
+                <p><strong>And what about AI?</strong>
+                It means the tool is powered by Artificial Intelligence, which helps it work smarter and faster for you.
+                </p>
           </div>
 
           <h3 style={sectionHeaderStyle}>Where AI Actually Helps</h3>

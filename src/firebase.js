@@ -1,14 +1,17 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBhsMRHyuWF-R9MyRKKjzGQC0p-eznYILE",
-  authDomain: "uplift-local.firebaseapp.com",
-  projectId: "uplift-local",
-  storageBucket: "uplift-local.firebasestorage.app",
-  messagingSenderId: "615612260052",
-  appId: "1:615612260052:web:c7cac371c0698314e36541"
+  apiKey: "AIzaSyDFO-gWcOALhRUUHP8YHFQM8uGrASjjpx4",
+  authDomain: "msaas-9e82a.firebaseapp.com",
+  projectId: "msaas-9e82a",
+  storageBucket: "msaas-9e82a.firebasestorage.app",
+  messagingSenderId: "297322776876",
+  appId: "1:297322776876:web:997461d305b80b2e888489"
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, "MSaaS");
+// Check if a Firebase app is already initialized to prevent the '[DEFAULT]' error
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// Initialize Firestore WITHOUT the "MSaaS" string
+export const db = getFirestore(app);
