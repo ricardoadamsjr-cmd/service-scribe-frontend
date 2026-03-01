@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import snapcopyLogo from "./assets/snapcopyLogo.png";
-import airStadtLogo from "./assets/AirStadt_logo orange.png";
+import airStadtLogo from "./assets/AirStadtLogo.png";
 import InterestForm from "./pages/InterestForm"; 
 
 function HomePage() {
