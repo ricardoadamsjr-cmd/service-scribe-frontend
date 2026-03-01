@@ -9,9 +9,12 @@ function HomePage() {
   const [industry, setIndustry] = useState("");
   const [city, setCity] = useState("");
   const [years, setYears] = useState("");
-  const [originalPost, setOriginalPost] = useState("");
-  const [comment, setComment] = useState("");
+  
+  // NEW RESPONDER STATE ONLY
+  const [businessType, setBusinessType] = useState("");
   const [tone, setTone] = useState("");
+  const [description, setDescription] = useState("");
+  
   const [rawComments, setRawComments] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,8 +62,9 @@ function HomePage() {
   });
 
   const handleModeSwitch = (newMode) => {
+    // Clear all fields to prevent cross-over
     setIndustry(""); setCity(""); setYears("");
-    setOriginalPost(""); setComment(""); setTone("");
+    setBusinessType(""); setTone(""); setDescription("");
     setRawComments(""); setOutput(""); setError("");
     setCopied(false); setMode(newMode);
   };
@@ -78,19 +82,27 @@ function HomePage() {
 
   async function generate() {
     setOutput(""); setError(""); setCopied(false);
+    
+    // STRICT FRONTEND VALIDATION
     if (mode === "about" && (!industry.trim() || !city.trim() || !years.trim())) {
       setError("Please fill out all About Us fields"); return;
-    } else if (mode === "responder" && (!originalPost.trim() || !tone.trim())) {
-      setError("Please fill out all Responder fields"); return;
+    } else if (mode === "responder" && (!businessType || !tone)) {
+      setError("Please select a Business Type and Tone"); return;
     } else if (mode === "sentiment" && !rawComments.trim()) {
       setError("Please paste the page content or comments"); return;
     }
     
     setLoading(true);
     let payload = { mode };
-    if (mode === "about") payload = { ...payload, industry, city, years };
-    else if (mode === "responder") payload = { ...payload, originalPost, comment, tone };
-    else payload = { ...payload, rawComments };
+    
+    if (mode === "about") {
+      payload = { ...payload, industry, city, years };
+    } else if (mode === "responder") {
+      // Only sending the 3 required fields for the new Responder
+      payload = { ...payload, businessType, tone, description };
+    } else {
+      payload = { ...payload, rawComments };
+    }
 
     try {
       const response = await fetch("https://api.snapcopy.online/generate", {
@@ -98,8 +110,14 @@ function HomePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
+      
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || `Server error: ${response.status}`);
+      
+      if (!response.ok) {
+        // This is likely where your "Please fill out fields" error is coming from (the server)
+        throw new Error(data.error || `Server error: ${response.status}`);
+      }
+      
       const result = mode === "about" ? data.about : (mode === "responder" ? data.reply : data.sentiment);
       setOutput(result);
     } catch (err) {
@@ -155,7 +173,7 @@ function HomePage() {
         )}
         {mode === "responder" && (
           <div style={instructionStyle}>
-            <strong>Instructions:</strong> Paste the post you want to reply to. SnapCopy will craft a tailored response based on the tone you choose.
+            <strong>Instructions:</strong> Select your business type and tone. Add a short description of the post if you like. SnapCopy will generate 5 captions, 5 hashtags, 3 ideas, and 1 CTA.
           </div>
         )}
         {mode === "sentiment" && (
@@ -175,9 +193,45 @@ function HomePage() {
 
         {mode === "responder" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-            <InputField label="Original Post" value={originalPost} onChange={setOriginalPost} placeholder="Paste original post..." colors={colors} getInputStyle={getInputStyle} />
-            <InputField label="Comment" value={comment} onChange={setComment} placeholder="Comment to reply to (optional)..." colors={colors} getInputStyle={getInputStyle} />
-            <InputField label="Tone" value={tone} onChange={setTone} placeholder="Friendly, professional..." colors={colors} getInputStyle={getInputStyle} />
+            <div>
+              <label style={{ fontSize: "14px", fontWeight: "600", color: "#4a5568" }}>Business or Topic Type</label>
+              <select 
+                value={businessType} 
+                onChange={(e) => setBusinessType(e.target.value)} 
+                style={inputStyle}
+              >
+                <option value="">Select a type...</option>
+                <option value="landscaper">Landscaper</option>
+                <option value="realtor">Realtor</option>
+                <option value="barber">Barber</option>
+                <option value="hvac">HVAC</option>
+                <option value="dentist">Dentist</option>
+              </select>
+            </div>
+            
+            <div>
+              <label style={{ fontSize: "14px", fontWeight: "600", color: "#4a5568" }}>Tone</label>
+              <select 
+                value={tone} 
+                onChange={(e) => setTone(e.target.value)} 
+                style={inputStyle}
+              >
+                <option value="">Select a tone...</option>
+                <option value="professional">Professional</option>
+                <option value="friendly">Friendly</option>
+                <option value="bold">Bold</option>
+                <option value="luxury">Luxury</option>
+              </select>
+            </div>
+
+            <InputField 
+              label="Short Description (Optional)" 
+              value={description} 
+              onChange={setDescription} 
+              placeholder="What is this post about?" 
+              colors={colors} 
+              getInputStyle={getInputStyle} 
+            />
           </div>
         )}
 
@@ -202,7 +256,7 @@ function HomePage() {
                 {copied ? "Copied!" : "Copy"}
               </button>
             </div>
-            <textarea value={output} readOnly style={{ width: "100%", height: "180px", padding: "15px", borderRadius: "12px", border: `1px solid ${colors.lightGray}`, backgroundColor: "#f8fafc", fontSize: "14px", lineHeight: "1.6", color: colors.textDark, resize: "none" }} />
+            <textarea value={output} readOnly style={{ width: "100%", height: "250px", padding: "15px", borderRadius: "12px", border: `1px solid ${colors.lightGray}`, backgroundColor: "#f8fafc", fontSize: "14px", lineHeight: "1.6", color: colors.textDark, resize: "none" }} />
           </div>
         )}
       </div>
@@ -215,7 +269,6 @@ function HomePage() {
   );
 }
 
-// Helper Components and Router remain the same...
 function InputField({ label, value, onChange, placeholder, type = "text", colors, getInputStyle }) {
   const [focused, setFocused] = useState(false);
   return (
